@@ -40,7 +40,7 @@ def embed_resources(input_file, output_file):
         href = link.get('href')
         if href:
             try:
-                content = get_content(href, base_url)
+                content = get_content(href, base_dir)
                 style_tag = soup.new_tag('style')
                 style_tag.string = content.decode('utf-8')
                 link.replace_with(style_tag)
@@ -52,7 +52,7 @@ def embed_resources(input_file, output_file):
         src = script.get('src')
         if src:
             try:
-                content = get_content(src, base_url)
+                content = get_content(src, base_dir)
                 new_script = soup.new_tag('script')
                 new_script.string = content.decode('utf-8')
                 script.replace_with(new_script)
