@@ -2,6 +2,7 @@ import sys
 import os
 import base64
 import requests
+import re
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
 
@@ -19,7 +20,7 @@ def get_content(path, base_dir):
 def encode_image(content):
     return base64.b64encode(content).decode('utf-8')
 
-def embed_resources(input_file, output_file, base_url):
+def embed_resources(input_file, output_file, base_url, module_js=True):
     base_dir = os.path.dirname(input_file)
 
     with open(input_file, 'r', encoding='utf-8') as file:
@@ -53,8 +54,18 @@ def embed_resources(input_file, output_file, base_url):
         if src:
             try:
                 content = get_content(src, base_dir)
-                new_script = soup.new_tag('script')
-                new_script.string = content.decode('utf-8')
+                js_text = content.decode('utf-8')
+                # Determine if this script should be a module (contains export/import)
+                is_module = False
+                # detect ES module syntax (export or import) anywhere in the script
+                if module_js and re.search(r"\b(?:export|import)\b", js_text):
+                    is_module = True
+                # Create script tag, using type="module" if needed
+                if is_module:
+                    new_script = soup.new_tag('script', type='module')
+                else:
+                    new_script = soup.new_tag('script')
+                new_script.string = js_text
                 script.replace_with(new_script)
             except Exception as e:
                 print(f"Warning: Could not embed JavaScript {src}: {e}")
@@ -66,14 +77,23 @@ def embed_resources(input_file, output_file, base_url):
 
 import argparse
 
+
 def main():
     parser = argparse.ArgumentParser(description="Embed all resources into an HTML file.")
     parser.add_argument("input_file", help="Input HTML file")
     parser.add_argument("output_file", help="Output HTML file")
     parser.add_argument("--base-url", default="./", help="Base URL or directory for resources (default: ./)")
+    parser.add_argument(
+        "--module-js", dest="module_js", action="store_true", default=True,
+        help="Wrap inlined JS containing export/import in <script type=module> (default: on)"
+    )
+    parser.add_argument(
+        "--no-module-js", dest="module_js", action="store_false",
+        help="Do not wrap inlined JS as module scripts"
+    )
     args = parser.parse_args()
 
-    embed_resources(args.input_file, args.output_file, args.base_url)
+    embed_resources(args.input_file, args.output_file, args.base_url, args.module_js)
     print(f"Self-contained HTML file created: {args.output_file}")
 
 if __name__ == "__main__":
