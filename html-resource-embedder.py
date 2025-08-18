@@ -19,7 +19,7 @@ def get_content(path, base_dir):
 def encode_image(content):
     return base64.b64encode(content).decode('utf-8')
 
-def embed_resources(input_file, output_file):
+def embed_resources(input_file, output_file, base_url):
     base_dir = os.path.dirname(input_file)
 
     with open(input_file, 'r', encoding='utf-8') as file:
@@ -63,16 +63,18 @@ def embed_resources(input_file, output_file):
     with open(output_file, 'w', encoding='utf-8') as file:
         file.write(str(soup))
 
+
+import argparse
+
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: python script.py <input_html_file> <output_html_file>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Embed all resources into an HTML file.")
+    parser.add_argument("input_file", help="Input HTML file")
+    parser.add_argument("output_file", help="Output HTML file")
+    parser.add_argument("--base-url", default="./", help="Base URL or directory for resources (default: ./)")
+    args = parser.parse_args()
 
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
-
-    embed_resources(input_file, output_file)
-    print(f"Self-contained HTML file created: {output_file}")
+    embed_resources(args.input_file, args.output_file, args.base_url)
+    print(f"Self-contained HTML file created: {args.output_file}")
 
 if __name__ == "__main__":
     main()

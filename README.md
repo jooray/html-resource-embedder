@@ -22,6 +22,17 @@ poetry install
 
 # Usage
 
+
 ```
-poetry run python html-resource-embedder.py input.html self-contained.html
+poetry run python html-resource-embedder.py input.html self-contained.html [--base-url BASE_URL]
+```
+
+Arguments:
+- `input.html`: The input HTML file
+- `self-contained.html`: The output HTML file
+- `--base-url BASE_URL`: (Optional) Base URL or directory for resources (default: `./`)
+
+Example:
+```
+poetry run python html-resource-embedder.py index.html self-contained.html --base-url ./assets/
 ```
