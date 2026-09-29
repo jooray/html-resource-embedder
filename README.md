@@ -1,6 +1,19 @@
 # html-resource-embedder
 embed all media/js/css into a static self-contained html
 
+<!-- jooray-links:start -->
+### More from me
+
+**Related projects**
+
+- [nowhere-webxdc](https://github.com/jooray/nowhere-webxdc): the nowhere offline URL renderer as a WebXDC app for Delta Chat
+- [d21poll](https://github.com/jooray/d21poll): plus and minus voting for chat groups, as a WebXDC app
+
+**Full project showcase:** [all my projects](https://juraj.bednar.io/showcase/).
+
+I write about building things on [my blog](https://juraj.bednar.io/en/blog-en/). I also wrote a cypherpunk novel, [Tamers of Entropy](https://tamersofentropy.net/), and there is a [trailer](https://tamersofentropy.net/#trailer).
+<!-- jooray-links:end -->
+
 # Install
 
 ```
